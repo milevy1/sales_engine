@@ -59,52 +59,59 @@ describe "Merchants API" do
     expect(data).to eq(expected)
   end
 
-  it 'can find by parameters' do
-    get "/api/v1/merchants/find?name=#{@merchant_1.name}"
-
-    expect(response).to be_successful
-
-    data = JSON.parse(response.body)
-
+  it 'can find a single row by parameters' do
     expected = {
-                "data" => {
-                  "id" => "#{@merchant_1.id}",
-                    "type" => "merchant",
-                    "attributes" => {
-                      "name" => "#{@merchant_1.name}"
-                    }
-                  }
-                }
+      "data" => {
+        "id" => "#{@merchant_1.id}",
+        "type" => "merchant",
+        "attributes" => {
+          "name" => "#{@merchant_1.name}"
+        }
+      }
+    }
 
+    # Find by name
+    get "/api/v1/merchants/find?name=#{@merchant_1.name}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
     expect(data).to eq(expected)
 
+    # Find by id
     get "/api/v1/merchants/find?id=#{@merchant_1.id}"
-
+    expect(response).to be_successful
     data = JSON.parse(response.body)
+    expect(data).to eq(expected)
 
+    # Find by created_at
+    get "/api/v1/merchants/find?created_at=#{@timestamp}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
+    expect(data).to eq(expected)
+
+    # Find by updated_at
+    get "/api/v1/merchants/find?updated_at=#{@timestamp}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
     expect(data).to eq(expected)
   end
 
-  it 'can find_all by parameters' do
+  it 'can find_all rows by parameters' do
+    expected = {
+      "data" => [
+        {
+          "id" => "#{@merchant_1.id}",
+          "type" => "merchant",
+          "attributes" => {
+            "name" => "#{@merchant_1.name}"
+          }
+        }
+      ]
+    }
+
     # Find all with .name
     get "/api/v1/merchants/find_all?name=#{@merchant_1.name}"
-
     expect(response).to be_successful
-
     data = JSON.parse(response.body)
-
-    expected = {
-                "data" => [
-                          {
-                  "id" => "#{@merchant_1.id}",
-                    "type" => "merchant",
-                    "attributes" => {
-                      "name" => "#{@merchant_1.name}"
-                    }
-                  }
-                  ]
-                }
-
     expect(data).to eq(expected)
 
     # Find all with .id
