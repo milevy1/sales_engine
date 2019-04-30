@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 describe "Merchants API" do
+  before :each do
+    @merchant_1 = create(:merchant)
+    @merchant_2 = create(:merchant)
+  end
   it "sends a list of merchants" do
-    merchant_1 = create(:merchant)
-    merchant_2 = create(:merchant)
+
 
     get '/api/v1/merchants.json'
 
@@ -14,17 +17,17 @@ describe "Merchants API" do
     expected = {
                 "data" => [
                 {
-                  "id" => "#{merchant_1.id}",
+                  "id" => "#{@merchant_1.id}",
                     "type" => "merchant",
                     "attributes" => {
-                      "name" => "#{merchant_1.name}"
+                      "name" => "#{@merchant_1.name}"
                     }
                 },
                 {
-                  "id" => "#{merchant_2.id}",
+                  "id" => "#{@merchant_2.id}",
                   "type" => "merchant",
                   "attributes" => {
-                    "name" => "#{merchant_2.name}"
+                    "name" => "#{@merchant_2.name}"
                   }
                 }
                ]
@@ -34,9 +37,7 @@ describe "Merchants API" do
   end
 
   it 'sends a single merchant' do
-    merchant = create(:merchant)
-
-    get "/api/v1/merchants/#{merchant.id}.json"
+    get "/api/v1/merchants/#{@merchant_1.id}.json"
 
     expect(response).to be_successful
 
@@ -44,10 +45,30 @@ describe "Merchants API" do
 
     expected = {
                 "data" => {
-                  "id" => "#{merchant.id}",
+                  "id" => "#{@merchant_1.id}",
                     "type" => "merchant",
                     "attributes" => {
-                      "name" => "#{merchant.name}"
+                      "name" => "#{@merchant_1.name}"
+                    }
+                  }
+                }
+
+    expect(data).to eq(expected)
+  end
+
+  it 'can find by parameters' do
+    get "/api/v1/merchants/find?name=#{@merchant_1.name}"
+    
+    expect(response).to be_successful
+
+    data = JSON.parse(response.body)
+
+    expected = {
+                "data" => {
+                  "id" => "#{@merchant_1.id}",
+                    "type" => "merchant",
+                    "attributes" => {
+                      "name" => "#{@merchant_1.name}"
                     }
                   }
                 }
