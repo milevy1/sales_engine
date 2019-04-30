@@ -58,7 +58,7 @@ describe "Merchants API" do
 
   it 'can find by parameters' do
     get "/api/v1/merchants/find?name=#{@merchant_1.name}"
-    
+
     expect(response).to be_successful
 
     data = JSON.parse(response.body)
@@ -72,6 +72,12 @@ describe "Merchants API" do
                     }
                   }
                 }
+
+    expect(data).to eq(expected)
+
+    get "/api/v1/merchants/find?id=#{@merchant_1.id}"
+
+    data = JSON.parse(response.body)
 
     expect(data).to eq(expected)
   end
