@@ -2,12 +2,15 @@ require 'rails_helper'
 
 describe "Merchants API" do
   before :each do
-    @merchant_1 = create(:merchant)
+    @timestamp = "2012-03-27T14:54:05.000Z"
+    @merchant_1 = create(:merchant,
+      created_at: @timestamp,
+      updated_at: @timestamp
+    )
     @merchant_2 = create(:merchant)
   end
+
   it "sends a list of merchants" do
-
-
     get '/api/v1/merchants.json'
 
     expect(response).to be_successful
@@ -79,6 +82,47 @@ describe "Merchants API" do
 
     data = JSON.parse(response.body)
 
+    expect(data).to eq(expected)
+  end
+
+  it 'can find_all by parameters' do
+    # Find all with .name
+    get "/api/v1/merchants/find_all?name=#{@merchant_1.name}"
+
+    expect(response).to be_successful
+
+    data = JSON.parse(response.body)
+
+    expected = {
+                "data" => [
+                          {
+                  "id" => "#{@merchant_1.id}",
+                    "type" => "merchant",
+                    "attributes" => {
+                      "name" => "#{@merchant_1.name}"
+                    }
+                  }
+                  ]
+                }
+
+    expect(data).to eq(expected)
+
+    # Find all with .id
+    get "/api/v1/merchants/find_all?id=#{@merchant_1.id}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
+    expect(data).to eq(expected)
+
+    # Find all with .created_at
+    get "/api/v1/merchants/find_all?created_at=#{@timestamp}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
+    expect(data).to eq(expected)
+
+    # Find all with .updated_at
+    get "/api/v1/merchants/find_all?updated_at=#{@timestamp}"
+    expect(response).to be_successful
+    data = JSON.parse(response.body)
     expect(data).to eq(expected)
   end
 end
