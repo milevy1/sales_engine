@@ -23,6 +23,7 @@ describe "Merchants API" do
                   "id" => "#{@merchant_1.id}",
                     "type" => "merchant",
                     "attributes" => {
+                      "id" => @merchant_1.id,
                       "name" => "#{@merchant_1.name}"
                     }
                 },
@@ -30,6 +31,7 @@ describe "Merchants API" do
                   "id" => "#{@merchant_2.id}",
                   "type" => "merchant",
                   "attributes" => {
+                    "id" => @merchant_2.id,
                     "name" => "#{@merchant_2.name}"
                   }
                 }
@@ -51,6 +53,7 @@ describe "Merchants API" do
                   "id" => "#{@merchant_1.id}",
                     "type" => "merchant",
                     "attributes" => {
+                      "id" => @merchant_1.id,
                       "name" => "#{@merchant_1.name}"
                     }
                   }
@@ -65,6 +68,7 @@ describe "Merchants API" do
         "id" => "#{@merchant_1.id}",
         "type" => "merchant",
         "attributes" => {
+          "id" => @merchant_1.id,
           "name" => "#{@merchant_1.name}"
         }
       }
@@ -102,6 +106,7 @@ describe "Merchants API" do
           "id" => "#{@merchant_1.id}",
           "type" => "merchant",
           "attributes" => {
+            "id" => @merchant_1.id,
             "name" => "#{@merchant_1.name}"
           }
         }
