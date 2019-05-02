@@ -38,6 +38,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'simplecov'
+  gem 'awesome_print'
 end
 
 group :development do
