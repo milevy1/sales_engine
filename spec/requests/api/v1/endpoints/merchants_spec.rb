@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "Merchants API" do
+describe "Merchants API Endpoints" do
   before :each do
     @timestamp = "2012-03-27T14:54:05.000Z"
     @merchant_1 = create(:merchant,
