@@ -23,7 +23,7 @@ class Merchant < ApplicationRecord
 
   def self.total_revenue_for_day(date)
     start_of_search_date = date.to_datetime
-    end_of_search_date = date.to_datetime.end_of_day
+    end_of_search_date = start_of_search_date.end_of_day
 
     InvoiceItem.joins(invoice: :transactions)
     .where("transactions.result = ? AND invoices.created_at BETWEEN ? AND ?", 'success', start_of_search_date, end_of_search_date)
