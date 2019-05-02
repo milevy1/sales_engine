@@ -79,4 +79,18 @@ describe 'Merchants API Business Intelligence Endpoints' do
       expect(data).to eq({"total_revenue" => expected_revenue_to_dollars_string})
     end
   end
+
+  describe 'GET /api/v1/merchants/:id/revenue' do
+    it 'returns the total revenue for that merchant across successful transactions' do
+      get "/api/v1/merchants/#{@merchants[0].id}/revenue"
+      expect(response).to be_successful
+
+      data = JSON.parse(response.body)["data"]["attributes"]
+
+      expected_revenue = @invoice_item_1.quantity * @invoice_item_1.unit_price
+      expected_revenue_to_dollars_string = (BigDecimal(expected_revenue) / 100).to_s
+
+      expect(data).to eq({"revenue" => expected_revenue_to_dollars_string})
+    end
+  end
 end
