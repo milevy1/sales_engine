@@ -52,5 +52,18 @@ describe 'Items API Business Intelligence Endpoints' do
     end
   end
 
+  describe 'GET /api/v1/items/most_items?quantity=x' do
+    it 'returns the top x item instances ranked by total number sold' do
+      quantity = 2
 
+      get "/api/v1/items/most_items?quantity=#{quantity}"
+      expect(response).to be_successful
+
+      top_2_items = JSON.parse(response.body)["data"]
+
+      expect(top_2_items.count).to eq(quantity)
+      expect(top_2_items[0]["id"].to_i).to eq(@item_1.id)
+      expect(top_2_items[1]["id"].to_i).to eq(@item_2.id)
+    end
+  end
 end
