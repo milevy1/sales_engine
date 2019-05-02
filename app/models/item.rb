@@ -11,7 +11,7 @@ class Item < ApplicationRecord
       greater_than: 0
     }
 
-    def unit_price_to_dollar_string
-      (self.unit_price.to_f / 100).to_s
-    end
+  def unit_price_to_dollar_string
+    (self.unit_price.to_f / 100).to_s
+  end
 end
