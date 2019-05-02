@@ -8,7 +8,7 @@ class Api::V1::Items::SearchController < ApplicationController
     end
 
     render json: ItemSerializer.new(
-      Item.where(attribute_name => attribute_value))
+      Item.where(attribute_name => attribute_value).order(:id))
   end
 
   def show
@@ -20,6 +20,6 @@ class Api::V1::Items::SearchController < ApplicationController
     end
 
     render json: ItemSerializer.new(
-      Item.find_by(attribute_name => attribute_value))
+      Item.order(:id).find_by(attribute_name => attribute_value))
   end
 end
