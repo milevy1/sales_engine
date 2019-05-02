@@ -20,4 +20,13 @@ class Merchant < ApplicationRecord
     .order("quantity_sold DESC")
     .limit(limit)
   end
+
+  def self.total_revenue_for_day(date)
+    start_of_search_date = date.to_datetime
+    end_of_search_date = date.to_datetime.end_of_day
+
+    InvoiceItem.joins(invoice: :transactions)
+    .where("transactions.result = ? AND invoices.created_at BETWEEN ? AND ?", 'success', start_of_search_date, end_of_search_date)
+    .select("SUM(invoice_items.quantity * invoice_items.unit_price) as total_revenue")[0]
+  end
 end
