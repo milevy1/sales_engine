@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         get "/:id/invoices", to: "invoices#index"
         get "/revenue", to: "revenue_for_date#show"
         get "/:id/revenue", to: "revenue#show"
+        get "/:id/favorite_customer", to: "favorite_customer#show"
       end
       resources :merchants, only: [:index, :show]
 

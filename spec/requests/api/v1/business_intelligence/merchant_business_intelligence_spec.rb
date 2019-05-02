@@ -3,13 +3,14 @@ require 'rails_helper'
 describe 'Merchants API Business Intelligence Endpoints' do
   before :each do
     @merchants = create_list(:merchant, 3)
+    @favorite_customer = create(:customer)
 
     @item_1 = create(:item, merchant: @merchants[0])
     @item_2 = create(:item, merchant: @merchants[1])
     @item_3 = create(:item, merchant: @merchants[2])
 
     @search_date = "2012-03-16"
-    @invoice_1 = create(:invoice, merchant: @merchants[0], created_at: @search_date)
+    @invoice_1 = create(:invoice, merchant: @merchants[0], created_at: @search_date, customer: @favorite_customer)
     @invoice_2 = create(:invoice, merchant: @merchants[1], created_at: @search_date)
     @invoice_3 = create(:invoice, merchant: @merchants[2])
 
@@ -105,6 +106,17 @@ describe 'Merchants API Business Intelligence Endpoints' do
       expected_revenue_to_dollars_string = (BigDecimal(expected_revenue) / 100).to_s
 
       expect(data).to eq({"revenue" => expected_revenue_to_dollars_string})
+    end
+  end
+
+  describe 'GET /api/v1/merchants/:id/favorite_customer' do
+    it 'returns the customer who has conducted the most total number of successful transactions' do
+      get "/api/v1/merchants/#{@merchants[0].id}/favorite_customer"
+      expect(response).to be_successful
+
+      data = JSON.parse(response.body)["data"]["attributes"]
+
+      expect(data["id"]).to eq(@favorite_customer.id)
     end
   end
 end
