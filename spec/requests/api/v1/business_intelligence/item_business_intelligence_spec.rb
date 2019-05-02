@@ -66,4 +66,17 @@ describe 'Items API Business Intelligence Endpoints' do
       expect(top_2_items[1]["id"].to_i).to eq(@item_2.id)
     end
   end
+
+  describe 'GET /api/v1/items/:id/best_day' do
+    it 'returns the date with the most sales for the given item using the invoice date' do
+      # If there are multiple days with equal number of sales, return the most recent day
+
+      get "/api/v1/items/#{@item_1.id}/best_day"
+      expect(response).to be_successful
+
+      best_day = JSON.parse(response.body)["data"]["attributes"]["best_day"]
+
+      expect(best_day).to eq(@search_date)
+    end
+  end
 end
