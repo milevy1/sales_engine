@@ -63,4 +63,17 @@ describe "Invoices API Relationship Endpoints" do
       end
     end
   end
+
+  describe 'GET /api/v1/invoices/:id/customer' do
+    it 'returns the associated customer' do
+      get "/api/v1/invoices/#{@invoice_1.id}/customer"
+      expect(response).to be_successful
+
+      customer = JSON.parse(response.body)["data"]["attributes"]
+
+      expect(customer["id"]).to eq(@invoice_1.customer.id)
+      expect(customer["first_name"]).to eq(@invoice_1.customer.first_name)
+      expect(customer["last_name"]).to eq(@invoice_1.customer.last_name)
+    end
+  end
 end
