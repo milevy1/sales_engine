@@ -2,15 +2,20 @@ require 'rails_helper'
 
 describe "Invoices API Relationship Endpoints" do
   before :each do
-    @invoice_1 = create(:invoice)
+    @merchant_1 = create(:merchant)
+
+    @item_1 = create(:item, merchant: @merchant_1)
+    @item_2 = create(:item, merchant: @merchant_1)
+
+    @invoice_1 = create(:invoice, merchant: @merchant_1)
     @invoice_2 = create(:invoice)
 
     @transaction_1 = create(:failed_transaction, invoice: @invoice_1)
     @transaction_2 = create(:transaction, invoice: @invoice_1)
     @unaffilated_transaction = create(:transaction)
 
-    @invoice_item_1 = create(:invoice_item, invoice: @invoice_1)
-    @invoice_item_2 = create(:invoice_item, invoice: @invoice_1)
+    @invoice_item_1 = create(:invoice_item, invoice: @invoice_1, item: @item_1)
+    @invoice_item_2 = create(:invoice_item, invoice: @invoice_1, item: @item_2)
     @unaffilated_invoice_item = create(:invoice_item)
   end
 
@@ -40,6 +45,21 @@ describe "Invoices API Relationship Endpoints" do
 
       invoice_items.each do |invoice_item|
         expect(invoice_item["attributes"]["invoice_id"]).to eq(@invoice_1.id)
+      end
+    end
+  end
+
+  describe 'GET /api/v1/invoices/:id/items' do
+    it 'returns a collection of associated items' do
+      get "/api/v1/invoices/#{@invoice_1.id}/items"
+      expect(response).to be_successful
+
+      items = JSON.parse(response.body)["data"]
+
+      expect(items.count).to eq(2)
+
+      items.each do |item|
+        expect(item["attributes"]["merchant_id"]).to eq(@invoice_1.merchant_id)
       end
     end
   end
