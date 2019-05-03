@@ -30,4 +30,16 @@ describe "Invoice Items API Relationship Endpoints" do
       expect(invoice["customer_id"]).to eq(@invoice_1.customer_id)
     end
   end
+
+  describe 'GET /api/v1/invoice_items/:id/item' do
+    it 'returns the associated item' do
+      get "/api/v1/invoice_items/#{@invoice_item_1.id}/item"
+      expect(response).to be_successful
+
+      item = JSON.parse(response.body)["data"]["attributes"]
+
+      expect(item["id"]).to eq(@item_1.id)
+      expect(item["name"]).to eq(@item_1.name)
+    end
+  end
 end
