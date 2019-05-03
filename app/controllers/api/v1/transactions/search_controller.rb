@@ -4,7 +4,7 @@ class Api::V1::Transactions::SearchController < ApplicationController
     attribute_value = params.values.first
 
     render json: TransactionSerializer.new(
-      Transaction.where(attribute_name => attribute_value))
+      Transaction.where(attribute_name => attribute_value).order(:id))
   end
 
   def show

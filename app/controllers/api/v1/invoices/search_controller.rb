@@ -4,7 +4,7 @@ class Api::V1::Invoices::SearchController < ApplicationController
     attribute_value = params.values.first
 
     render json: InvoiceSerializer.new(
-      Invoice.where(attribute_name => attribute_value))
+      Invoice.where(attribute_name => attribute_value).order(:id))
   end
 
   def show
