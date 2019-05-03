@@ -23,4 +23,16 @@ describe "Items API Relationship Endpoints" do
       end
     end
   end
+
+  describe 'GET /api/v1/items/:id/merchant' do
+    it 'returns the associated merchant' do
+      get "/api/v1/items/#{@item_1.id}/merchant"
+      expect(response).to be_successful
+
+      merchant = JSON.parse(response.body)["data"]["attributes"]
+
+      expect(merchant["id"]).to eq(@item_1.merchant_id)
+      expect(merchant["name"]).to eq(@item_1.merchant.name)
+    end
+  end
 end
