@@ -60,5 +60,11 @@ RSpec.describe Item, type: :model do
         expect(Item.most_items_sold(1)).to eq([@item_1])
       end
     end
+
+    describe '.most_revenue' do
+      it 'returns the top x items ranked by total revenue generated' do
+        expect(Item.most_revenue(1)).to eq([@item_1])
+      end
+    end
   end
 end
