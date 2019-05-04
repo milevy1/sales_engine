@@ -12,7 +12,7 @@ describe 'Merchants API Business Intelligence Endpoints' do
     @search_date = "2012-03-16"
     @invoice_1 = create(:invoice, merchant: @merchants[0], created_at: @search_date, customer: @favorite_customer)
     @invoice_2 = create(:invoice, merchant: @merchants[1], created_at: @search_date)
-    @invoice_3 = create(:invoice, merchant: @merchants[2])
+    @invoice_3 = create(:invoice, merchant: @merchants[2], customer: @favorite_customer)
 
     @transaction_1 = create(:transaction, invoice: @invoice_1)
     @transaction_2 = create(:transaction, invoice: @invoice_2)
@@ -117,6 +117,18 @@ describe 'Merchants API Business Intelligence Endpoints' do
       data = JSON.parse(response.body)["data"]["attributes"]
 
       expect(data["id"]).to eq(@favorite_customer.id)
+    end
+  end
+
+  describe 'GET /api/v1/merchants/:id/customers_with_pending_invoices' do
+    it 'returns a collection of customers which have pending (unpaid) invoices' do
+      get "/api/v1/merchants/#{@merchants[2].id}/customers_with_pending_invoices"
+
+      data = JSON.parse(response.body)["data"]
+
+      expect(data.size).to eq(1)
+      expect(data[0]["attributes"]["id"]).to eq(@favorite_customer.id)
+      expect(data[0]["attributes"]["first_name"]).to eq(@favorite_customer.first_name)
     end
   end
 end
