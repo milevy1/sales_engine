@@ -38,4 +38,20 @@ class Merchant < ApplicationRecord
     .order("transaction_count DESC")
     .limit(1)[0]
   end
+
+  def self.merchant_revenue_for_day(merchant_id, search_date = nil)
+    if search_date.nil?
+      Merchant.joins(invoices: [:invoice_items, :transactions])
+      .where("transactions.result = ? AND merchants.id = ?", "success", merchant_id)
+      .select("SUM(invoice_items.quantity * invoice_items.unit_price) as revenue")[0]
+    else
+      start_of_search_date = search_date.to_datetime
+      end_of_search_date = start_of_search_date.end_of_day
+
+      Merchant.joins(invoices: [:invoice_items, :transactions])
+      .where("transactions.result = ? AND merchants.id = ?", "success", merchant_id)
+      .where("invoices.created_at BETWEEN ? AND ?", start_of_search_date, end_of_search_date)
+      .select("SUM(invoice_items.quantity * invoice_items.unit_price) as revenue")[0]
+    end
+  end
 end

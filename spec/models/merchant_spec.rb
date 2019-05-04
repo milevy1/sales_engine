@@ -66,5 +66,19 @@ RSpec.describe Merchant, type: :model do
         expect(Merchant.favorite_customer(@merchants[0].id)).to eq(@favorite_customer)
       end
     end
+
+    describe '.merchant_revenue_for_day' do
+      it 'returns one merchant total revenue for a given day' do
+        expected = Merchant.merchant_revenue_for_day(@merchants[0].id, @search_date)
+
+        expect(expected.revenue).to eq(10)
+      end
+
+      it 'returns all revenue if no search date argument given' do
+        expected = Merchant.merchant_revenue_for_day(@merchants[0].id)
+
+        expect(expected.revenue).to eq(10)
+      end
+    end
   end
 end
