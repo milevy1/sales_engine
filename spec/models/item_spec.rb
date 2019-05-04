@@ -18,7 +18,8 @@ RSpec.describe Item, type: :model do
   describe 'Class Methods' do
     before :each do
       @merchant = create(:merchant)
-      @item = create(:item, merchant: @merchant)
+      @item_1 = create(:item, merchant: @merchant)
+      @other_items = create_list(:item, 2)
 
       @search_date = "2012-03-16"
       @invoice_1 = create(:invoice, merchant: @merchant, created_at: @search_date)
@@ -30,19 +31,19 @@ RSpec.describe Item, type: :model do
       @transaction_3 = create(:transaction, invoice: @invoice_3)
 
       @invoice_item_1 = create(:invoice_item,
-        item: @item,
+        item: @item_1,
         invoice: @invoice_1,
         quantity: 1,
         unit_price: 5)
 
       @invoice_item_2 = create(:invoice_item,
-        item: @item,
+        item: @item_1,
         invoice: @invoice_2,
         quantity: 1,
         unit_price: 5)
 
       @invoice_item_3 = create(:invoice_item,
-        item: @item,
+        item: @item_1,
         invoice: @invoice_3,
         quantity: 1,
         unit_price: 5)
@@ -50,7 +51,13 @@ RSpec.describe Item, type: :model do
 
     describe '.best_day' do
       it 'returns a AR relation grouped by invoices.created_at as order_date ordered by sum of quantity of items sold' do
-        expect(Item.best_day(@item.id).order_date).to eq(@search_date)
+        expect(Item.best_day(@item_1.id).order_date).to eq(@search_date)
+      end
+    end
+
+    describe '.most_items_sold' do
+      it 'returns the top x item instances ranked by total number sold' do
+        expect(Item.most_items_sold(1)).to eq([@item_1])
       end
     end
   end
