@@ -13,13 +13,14 @@ RSpec.describe Merchant, type: :model do
   describe 'Class methods' do
     before :each do
       @merchants = create_list(:merchant, 3)
+      @favorite_customer = create(:customer)
 
       @item_1 = create(:item, merchant: @merchants[0])
       @item_2 = create(:item, merchant: @merchants[1])
       @item_3 = create(:item, merchant: @merchants[2])
 
       @search_date = "2012-03-16"
-      @invoice_1 = create(:invoice, merchant: @merchants[0], created_at: @search_date)
+      @invoice_1 = create(:invoice, merchant: @merchants[0], customer: @favorite_customer, created_at: @search_date)
       @invoice_2 = create(:invoice, merchant: @merchants[1], created_at: @search_date)
       @invoice_3 = create(:invoice, merchant: @merchants[2])
 
@@ -57,6 +58,12 @@ RSpec.describe Merchant, type: :model do
         expected_revenue = @invoice_item_1.quantity * @invoice_item_1.unit_price + @invoice_item_2.quantity * @invoice_item_2.unit_price
 
         expect(Merchant.total_revenue_for_day(@search_date).total_revenue).to eq(expected_revenue)
+      end
+    end
+
+    describe '.favorite_customer' do
+      it 'returns the customer who has conducted the most total number of successful transactions' do
+        expect(Merchant.favorite_customer(@merchants[0].id)).to eq(@favorite_customer)
       end
     end
   end

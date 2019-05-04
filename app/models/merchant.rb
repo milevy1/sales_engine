@@ -29,4 +29,13 @@ class Merchant < ApplicationRecord
     .where("transactions.result = ? AND invoices.created_at BETWEEN ? AND ?", 'success', start_of_search_date, end_of_search_date)
     .select("SUM(invoice_items.quantity * invoice_items.unit_price) as total_revenue")[0]
   end
+
+  def self.favorite_customer(merchant_id)
+    Customer.joins(invoices: [:merchant, :transactions])
+    .select("customers.*, COUNT(transactions.id) as transaction_count")
+    .where("transactions.result = ? AND merchants.id = ?", "success", merchant_id)
+    .group(:id)
+    .order("transaction_count DESC")
+    .limit(1)[0]
+  end
 end
