@@ -54,4 +54,18 @@ class Merchant < ApplicationRecord
       .select("SUM(invoice_items.quantity * invoice_items.unit_price) as revenue")[0]
     end
   end
+
+  def self.customers_with_pending_invoices(merchant_id)
+    Customer.find_by_sql([
+      "SELECT c.*, i.id AS invoice_id FROM customers c
+        INNER JOIN invoices i ON i.customer_id = c.id
+        LEFT OUTER JOIN transactions t ON t.invoice_id = i.id
+        WHERE i.merchant_id = ? AND (t.result = ? OR t.result IS null)
+      EXCEPT
+      SELECT c.*, i.id AS invoice_id FROM customers c
+        INNER JOIN invoices i ON i.customer_id = c.id
+        INNER JOIN transactions t ON t.invoice_id = i.id
+        WHERE i.merchant_id = ? AND t.result = ?",
+        merchant_id, 'failed', merchant_id, 'success'])
+  end
 end

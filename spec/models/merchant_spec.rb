@@ -15,6 +15,9 @@ RSpec.describe Merchant, type: :model do
       @merchants = create_list(:merchant, 3)
       @favorite_customer = create(:customer)
 
+      @unpaid_customer_1 = create(:customer) # Only a failed transaction
+      @unpaid_customer_2 = create(:customer) # No transactions
+
       @item_1 = create(:item, merchant: @merchants[0])
       @item_2 = create(:item, merchant: @merchants[1])
       @item_3 = create(:item, merchant: @merchants[2])
@@ -22,11 +25,14 @@ RSpec.describe Merchant, type: :model do
       @search_date = "2012-03-16"
       @invoice_1 = create(:invoice, merchant: @merchants[0], customer: @favorite_customer, created_at: @search_date)
       @invoice_2 = create(:invoice, merchant: @merchants[1], created_at: @search_date)
-      @invoice_3 = create(:invoice, merchant: @merchants[2])
+      @invoice_3 = create(:invoice, merchant: @merchants[2], customer: @unpaid_customer_1)
+      @invoice_4 = create(:invoice, merchant: @merchants[2], customer: @unpaid_customer_2)
+      @paid_invoice = create(:invoice, merchant: @merchants[2])
 
       @transaction_1 = create(:transaction, invoice: @invoice_1)
       @transaction_2 = create(:transaction, invoice: @invoice_2)
       @transaction_3 = create(:failed_transaction, invoice: @invoice_3)
+      @paid_transaction = create(:transaction, invoice: @paid_invoice)
 
       @invoice_item_1 = create(:invoice_item,
         item: @item_1,
@@ -78,6 +84,17 @@ RSpec.describe Merchant, type: :model do
         expected = Merchant.merchant_revenue_for_day(@merchants[0].id)
 
         expect(expected.revenue).to eq(10)
+      end
+    end
+
+    describe '.customers_with_pending_invoices' do
+      it 'returns a collection of customers which have pending (unpaid) invoices' do
+        merchant_id = @merchants[2].id
+        expected = [@unpaid_customer_1, @unpaid_customer_2]
+
+        expect(Merchant.customers_with_pending_invoices(merchant_id).size).to eq(2)
+        expect(Merchant.customers_with_pending_invoices(merchant_id)[0]).to be_in(expected)
+        expect(Merchant.customers_with_pending_invoices(merchant_id)[1]).to be_in(expected)
       end
     end
   end
