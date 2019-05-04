@@ -92,7 +92,9 @@ RSpec.describe Merchant, type: :model do
         merchant_id = @merchants[2].id
         expected = [@unpaid_customer_1, @unpaid_customer_2]
 
-        expect(Merchant.customers_with_pending_invoices(merchant_id)).to eq(expected)
+        expect(Merchant.customers_with_pending_invoices(merchant_id).size).to eq(2)
+        expect(Merchant.customers_with_pending_invoices(merchant_id)[0]).to be_in(expected)
+        expect(Merchant.customers_with_pending_invoices(merchant_id)[1]).to be_in(expected)
       end
     end
   end
