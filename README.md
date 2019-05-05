@@ -38,4 +38,4 @@ RSpec was used for testing.  Test coverage was tracked with SimpleCov.
 - To run tests, from the root directory, run: ```rspec```
 
 ### Database Schema
-<img src='./app/assets/images/db_schema.png' width='700px'>
+<img src='./data/db_schema.png' width='700px'>
