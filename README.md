@@ -8,7 +8,6 @@ This is a solo student project from Turing School of Software & Design as part o
 * Use Ruby and ActiveRecord to perform more complicated business intelligence.
 * API will be compliant to the JSON API spec. [Documentation](https://jsonapi.org/)
 
-- View it live [here](Deploy to heroku)  
 - View the original assignment [here](http://backend.turing.io/module3/projects/rails_engine)
 
 ## Built With
