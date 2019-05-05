@@ -36,3 +36,6 @@ These instructions will get you a copy of the project up and running on your loc
 RSpec was used for testing.  Test coverage was tracked with SimpleCov.
 
 - To run tests, from the root directory, run: ```rspec```
+
+### Database Schema
+<img src='./app/assets/images/db_schema.png' width='700px'>
